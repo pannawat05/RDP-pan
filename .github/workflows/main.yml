@@ -1,4 +1,4 @@
-name: File Download and Processing
+name: Run on Ubuntu
 
 on:
   push:
@@ -6,35 +6,34 @@ on:
       - main
 
 jobs:
-  download-file:
+  ubuntu-job:
     runs-on: ubuntu-latest
+
     steps:
       # Step 1: Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Step 2: Set up environment
-      - name: Set up environment
+      # Step 2: Update system and install packages
+      - name: Update and install dependencies
         run: |
-          echo "Setting up environment..."
-      
-      # Step 3: Download the file
-      - name: Download file using curl
-        run: |
-          curl -o downloaded_file.txt https://example.com/file.txt
-          echo "Downloaded file.txt successfully."
+          sudo apt-get update
+          sudo apt-get install -y curl wget tree
 
-      # Step 4: Verify the file
-      - name: Verify file existence
+      # Step 3: Run a custom script
+      - name: Run custom commands
         run: |
-          if [ -f "downloaded_file.txt" ]; then
-            echo "File exists."
-          else
-            echo "File download failed."
-            exit 1
-          fi
+          echo "Running on Ubuntu"
+          uname -a
+          tree
 
-      # Step 5: Process the file (example)
-      - name: Process file
+      # Step 4: Test code (Python Example)
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Run Python script
         run: |
-          cat downloaded_file.txt
+          echo "print('Hello from Python')" > test.py
+          python test.py
