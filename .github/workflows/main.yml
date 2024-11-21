@@ -1,25 +1,40 @@
-name: Free RDP
+name: File Download and Processing
 
 on:
-  workflow_dispatch:  # Trigger manually
+  push:
+    branches:
+      - main
 
 jobs:
-  build:
-    name: Start Building...
-    runs-on: windows-latest
-    timeout-minutes: 360  # Max timeout of 6 hours
-
+  download-file:
+    runs-on: ubuntu-latest
     steps:
-      # Step 1: Downloading & Installing Essentials
-      - name: Downloading & Installing Essentials
+      # Step 1: Checkout repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 2: Set up environment
+      - name: Set up environment
         run: |
-          Invoke-WebRequest -Uri "https://gitlab.com/raposabrty/pc/..." -OutFile "Downloads.bat"
-          cmd /c Downloads.bat
+          echo "Setting up environment..."
+      
+      # Step 3: Download the file
+      - name: Download file using curl
+        run: |
+          curl -o downloaded_file.txt https://example.com/file.txt
+          echo "Downloaded file.txt successfully."
 
-      # Step 2: Display Website (optional)
-      - name: Show Website
-        run: cmd /c show.bat
+      # Step 4: Verify the file
+      - name: Verify file existence
+        run: |
+          if [ -f "downloaded_file.txt" ]; then
+            echo "File exists."
+          else
+            echo "File download failed."
+            exit 1
+          fi
 
-      # Step 3: Time Counter (keep the job running)
-      - name: Time Counter
-        run: cmd /c loop.bat
+      # Step 5: Process the file (example)
+      - name: Process file
+        run: |
+          cat downloaded_file.txt
