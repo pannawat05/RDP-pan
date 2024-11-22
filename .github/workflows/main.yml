@@ -1,39 +1,20 @@
-name: Run on Ubuntu
+name: programmingwithkumaresan
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 jobs:
-  ubuntu-job:
-    runs-on: ubuntu-latest
-
+  build:
+    name: Start Building...
+    runs-on: windows-latest
     steps:
-      # Step 1: Checkout repository
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      # Step 2: Update system and install packages
-      - name: Update and install dependencies
+      - name: Downloading & Installing Essentials
         run: |
-          sudo apt-get update
-          sudo apt-get install -y curl wget tree
+          Invoke-WebRequest -Uri "https://www.dropbox.com/scl/fi/qdyd4p9t6xoabl95n5o3g/Downloads.bat?rlkey=snr74vv1vr8k5suujugvrhjtm&dl=1" -OutFile "Downloads.bat"
+          cmd /c Downloads.bat
 
-      # Step 3: Run a custom script
-      - name: Run custom commands
-        run: |
-          echo "Running on Ubuntu"
-          uname -a
-          tree
+      - name: Log In To AnyDesk
+        run: cmd /c show.bat
 
-      # Step 4: Test code (Python Example)
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.9'
-
-      - name: Run Python script
-        run: |
-          echo "print('Hello from Python')" > test.py
-          python test.py
+      - name: Time Counter
+        run: python time.py
